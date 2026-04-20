@@ -1,10 +1,102 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #E2E8F0; /* Cool Slate gray background */
+}
+
+/* Neobrutalist Base Styles */
+.brutalist-card {
+  background-color: #ffffff;
+  border: 3px solid #000000;
+  border-radius: 0;
+  box-shadow: 4px 4px 0px #000000;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.brutalist-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.brutalist-header {
+  background-color: #A78BFA; /* Modern Violet */
+  border-bottom: 3px solid #000000;
+  padding: 1rem;
+  margin: -2rem -2rem 2rem -2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.brutalist-input {
+  border: 3px solid #000000 !important;
+  border-radius: 0 !important;
+  font-weight: bold;
+  box-shadow: 3px 3px 0px #000000 !important;
+  transition: all 0.2s ease;
+}
+
+.brutalist-input:focus {
+  outline: none !important;
+  box-shadow: 1px 1px 0px #000000 !important;
+  transform: translate(2px, 2px);
+}
+
+.brutalist-button {
+  background-color: #34D399; /* Emerald Green */
+  border: 3px solid #000000 !important;
+  border-radius: 0 !important;
+  color: #000000;
+  font-weight: 900 !important;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0px #000000 !important;
+  transition: all 0.1s ease;
+  margin-left: 10px;
+}
+
+.brutalist-button:hover, .brutalist-button:focus {
+  background-color: #10B981 !important; /* Deeper Emerald */
+  color: #000;
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #000000 !important;
+}
+
+.brutalist-button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px #000000 !important;
+}
+
+.brutalist-list {
+  border: 3px solid #000000;
+  border-radius: 0;
+  padding: 0;
+}
+
+.brutalist-list-item {
+  border-bottom: 3px solid #000000;
+  padding: 1rem;
+  background-color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.brutalist-list-item:last-child {
+  border-bottom: none;
+}
+
+.brutalist-badge {
+  background-color: #FBBF24 !important; /* Warm Amber */
+  border: 2px solid #000000;
+  color: #000;
+  font-weight: 900;
+  border-radius: 0;
+  box-shadow: 2px 2px 0px #000000;
 }
 
 code {
