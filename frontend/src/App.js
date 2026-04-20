@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 
+const API_URL = process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api';
+
 function App() {
   const [name, setName] = useState("");
   const [projects, setProjects] = useState([]);
 
   // Load projects from backend
   const fetchProjects = () => {
-    fetch("http://localhost:8000/projects")
+    fetch(`${API_URL}/projects`)
       .then((res) => res.json())
       .then((data) => setProjects(data));
   };
@@ -17,7 +19,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:8000/projects", {
+    fetch(`${API_URL}/projects`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, description: "New Project" }),
