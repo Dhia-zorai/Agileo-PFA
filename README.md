@@ -1,50 +1,62 @@
-# 🎓 Agileo - Mon Projet de Fin d'Année (PFA)
+# Agileo
 
-Salut ! Bienvenue sur le repo de mon projet **Agileo**. 🚀
+Agileo is a lightweight, modern project management application designed to facilitate Agile workflows. It features a high-performance REST API and a responsive, Neobrutalist-inspired user interface.
 
-C'est mon Projet de Fin d'Année (PFA). L'idée principale est de créer un petit outil de gestion de projets (façon Agile/Scrum). C'est encore au stade de prototype, mais la dernière mise à jour a apporté une interface "Néo-brutaliste" super cool avec des couleurs pastel ! 😎
+## System Architecture
 
-## 🛠️ Stack Technique
+*   **Frontend:** React.js (Custom Neobrutalist CSS styling)
+*   **Backend:** Python 3.10+ with FastAPI
+*   **Database:** SQLite (Development)
 
-Pour construire ça, j'utilise :
-*   **Frontend :** React (avec un design Néo-brutaliste entièrement customisé en CSS).
-*   **Backend :** Python avec le framework FastAPI (c'est super rapide et facile pour faire des API).
-*   **Base de données :** SQLite (pour le moment, ça évite de se prendre la tête avec l'installation d'une grosse BDD).
+## Prerequisites
 
-## 🚀 Comment tester mon projet sur votre machine ?
+Before running the application, ensure you have the following installed:
+*   [Python 3.10+](https://www.python.org/downloads/)
+*   [Node.js](https://nodejs.org/) (v16 or higher)
+*   [npm](https://www.npmjs.com/) (Node Package Manager)
 
-C'est tout simple, mais il faut lancer les deux parties (le serveur et l'interface client) :
+## Getting Started
 
-### 1. Lancer l'API Backend
-Ouvrez un terminal et tapez ces commandes :
+To run the application locally, you will need to start both the backend server and the frontend development server.
+
+### 1. Backend Setup
+
+The backend runs on FastAPI and serves the REST API.
+
 ```bash
 cd backend
 
-# Activer l'environnement virtuel (sous Windows)
+# Create and activate a virtual environment (Windows)
+python -m venv venv
 .\venv\Scripts\activate
 
-# Lancer le serveur local
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the development server
 uvicorn main:app --reload
 ```
-L'API devrait maintenant tourner sur `http://localhost:8000`.
+The API will be available at `http://localhost:8000`. You can view the interactive API documentation at `http://localhost:8000/docs`.
 
-### 2. Lancer l'Interface Frontend
-Ouvrez un autre terminal et lancez ceci :
+### 2. Frontend Setup
+
+The frontend is a React application that consumes the FastAPI backend.
+
 ```bash
 cd frontend
 
-# Installer les dépendances (juste la première fois)
+# Install dependencies
 npm install
 
-# Lancer le site
+# Start the development server
 npm start
 ```
-Votre navigateur devrait s'ouvrir tout seul sur `http://localhost:3000`. Profitez du design ! ✨
+The application will automatically open in your default browser at `http://localhost:3000`.
 
-## 📝 Ce qu'il reste à faire (Prochaines étapes)
-*   Remplacer les requêtes SQL brutes par un véritable ORM (comme SQLAlchemy ou SQLModel).
-*   Structurer le backend proprement (séparer les routes, les modèles, etc.).
-*   Terminer toutes les opérations CRUD (Modification et Suppression).
-*   Avoir une super bonne note au PFA ! 💯
+## Roadmap
 
-Merci d'avoir jeté un coup d'œil à mon projet et à très vite pour les prochaines updates !
+*   **Database Migration:** Transition from raw SQLite queries to an ORM (SQLAlchemy/SQLModel).
+*   **Backend Restructuring:** Refactor `main.py` into a modular architecture (routers, models, schemas).
+*   **Expanded CRUD Operations:** Implement update and delete functionalities for project entities.
+*   **Authentication:** Introduce secure user authentication and session management.
+*   **Containerization:** Add Docker support for streamlined deployment.
