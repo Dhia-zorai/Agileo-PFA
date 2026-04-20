@@ -1,62 +1,62 @@
 # Agileo
 
-Agileo is a lightweight, modern project management application designed to facilitate Agile workflows. It features a high-performance REST API and a responsive, Neobrutalist-inspired user interface.
+Agileo est une application moderne et légère de gestion de projet, conçue pour faciliter les flux de travail Agiles. Elle dispose d'une API REST performante et d'une interface utilisateur réactive.
 
-## System Architecture
+## Architecture du Système
 
-*   **Frontend:** React.js (Custom Neobrutalist CSS styling)
-*   **Backend:** Python 3.10+ with FastAPI
-*   **Database:** SQLite (Development)
+*   **Frontend :** React.js
+*   **Backend :** Python 3.10+ avec FastAPI
+*   **Base de données :** SQLite (Développement)
 
-## Prerequisites
+## Prérequis
 
-Before running the application, ensure you have the following installed:
+Avant d'exécuter l'application, assurez-vous d'avoir installé les éléments suivants :
 *   [Python 3.10+](https://www.python.org/downloads/)
-*   [Node.js](https://nodejs.org/) (v16 or higher)
+*   [Node.js](https://nodejs.org/) (v16 ou supérieur)
 *   [npm](https://www.npmjs.com/) (Node Package Manager)
 
-## Getting Started
+## Démarrage
 
-To run the application locally, you will need to start both the backend server and the frontend development server.
+Pour exécuter l'application localement, vous devrez démarrer le serveur backend ainsi que le serveur de développement frontend.
 
-### 1. Backend Setup
+### 1. Configuration du Backend
 
-The backend runs on FastAPI and serves the REST API.
+Le backend fonctionne sur FastAPI et sert l'API REST.
 
 ```bash
 cd backend
 
-# Create and activate a virtual environment (Windows)
+# Créer et activer un environnement virtuel (Windows)
 python -m venv venv
 .\venv\Scripts\activate
 
-# Install dependencies
+# Installer les dépendances
 pip install -r requirements.txt
 
-# Start the development server
+# Démarrer le serveur de développement
 uvicorn main:app --reload
 ```
-The API will be available at `http://localhost:8000`. You can view the interactive API documentation at `http://localhost:8000/docs`.
+L'API sera disponible à l'adresse `http://localhost:8000`. Vous pouvez consulter la documentation interactive de l'API à `http://localhost:8000/docs`.
 
-### 2. Frontend Setup
+### 2. Configuration du Frontend
 
-The frontend is a React application that consumes the FastAPI backend.
+Le frontend est une application React qui consomme le backend FastAPI.
 
 ```bash
 cd frontend
 
-# Install dependencies
+# Installer les dépendances
 npm install
 
-# Start the development server
+# Démarrer le serveur de développement
 npm start
 ```
-The application will automatically open in your default browser at `http://localhost:3000`.
+L'application s'ouvrira automatiquement dans votre navigateur par défaut à l'adresse `http://localhost:3000`.
 
-## Roadmap
+## Feuille de route
 
-*   **Database Migration:** Transition from raw SQLite queries to an ORM (SQLAlchemy/SQLModel).
-*   **Backend Restructuring:** Refactor `main.py` into a modular architecture (routers, models, schemas).
-*   **Expanded CRUD Operations:** Implement update and delete functionalities for project entities.
-*   **Authentication:** Introduce secure user authentication and session management.
-*   **Containerization:** Add Docker support for streamlined deployment.
+*   **Migration de la base de données :** Transition des requêtes SQLite brutes vers un ORM (SQLAlchemy/SQLModel).
+*   **Restructuration du Backend :** Refactorisation de `main.py` vers une architecture modulaire (routeurs, modèles, schémas).
+*   **Extension des opérations CRUD :** Implémentation des fonctionnalités de mise à jour et de suppression pour les entités de projet.
+*   **Authentification :** Introduction d'une authentification utilisateur sécurisée et de la gestion des sessions.
+*   **Conteneurisation :** Ajout de la prise en charge de Docker pour simplifier le déploiement.
