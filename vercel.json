@@ -3,7 +3,7 @@
   "regions": ["cdg1"],
   "builds": [
     {
-      "src": "backend/main.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
     },
     {
@@ -17,7 +17,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/backend/main.py"
+      "dest": "/api/index.py"
     },
     {
       "src": "/(favicon.ico|manifest.json|logo192.png|logo512.png|robots.txt)",
