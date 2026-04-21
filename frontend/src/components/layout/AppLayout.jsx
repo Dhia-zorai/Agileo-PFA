@@ -1,82 +1,99 @@
 import React from 'react';
-import { LayoutDashboard, ListTodo, Search, Bell, Settings } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import { LayoutGrid, ListTodo, KanbanSquare, Search, Bell, Mail, Settings } from 'lucide-react';
 
 export default function AppLayout({ children }) {
   return (
-    <div className="flex h-screen bg-surface-muted font-sans text-gray-900 antialiased selection:bg-brand/20">
+    <div className="flex h-screen bg-shell p-4 gap-6 overflow-hidden font-sans">
       
-      {/* Sidebar - Sleek & Minimal */}
-      <aside className="w-64 flex-shrink-0 border-r border-border bg-surface flex flex-col transition-all duration-fast ease-micro-spring">
-        <div className="h-14 flex items-center px-5 border-b border-border">
-          {/* Logo / Workspace Name */}
-          <div className="font-semibold tracking-tight text-[15px] flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-brand text-white flex items-center justify-center text-[10px] font-bold">A</div>
-            Agileo Workspace
-          </div>
+      {/* 1. Sidebar (Floating White Strip, 64px) */}
+      <aside className="w-[64px] flex-shrink-0 bg-surface shadow-ambient rounded-card-lg flex flex-col items-center py-6 gap-6 z-10">
+        {/* Workspace Avatar */}
+        <div className="w-10 h-10 rounded-pill bg-primary text-white flex items-center justify-center font-bold text-sm mb-4">
+          A
         </div>
         
-        <nav className="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
-          <div className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Views</div>
-          <NavItem to="/" icon={<LayoutDashboard size={16} strokeWidth={2.5} />} label="Dashboard" />
-          <NavItem to="/projects" icon={<ListTodo size={16} strokeWidth={2.5} />} label="Projects" />
-          {/* Add more later */}
+        {/* Navigation Icons */}
+        <nav className="flex-1 flex flex-col gap-4 w-full items-center">
+          <SidebarIcon to="/" icon={<LayoutGrid size={20} />} />
+          <SidebarIcon to="/backlog" icon={<ListTodo size={20} />} />
+          <SidebarIcon to="/board" icon={<KanbanSquare size={20} />} />
         </nav>
         
-        <div className="p-3 border-t border-border">
-          <button className="w-full flex items-center space-x-3 px-2 py-1.5 rounded-md text-[13px] font-medium transition-all duration-fast ease-micro-spring text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-            <Settings size={16} strokeWidth={2.5} />
-            <span>Settings</span>
-          </button>
+        <div className="mt-auto">
+          <SidebarIcon to="/settings" icon={<Settings size={20} />} />
         </div>
       </aside>
 
-      {/* Main Workspace */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      {/* Center Column: Top Bar + Main Area */}
+      <div className="flex-1 flex flex-col min-w-0">
         
-        {/* Header - Global Search & Context */}
-        <header className="h-14 bg-surface border-b border-border flex items-center justify-between px-6 z-10 shadow-ambient-sm">
-          <div className="flex items-center w-full max-w-md group bg-surface-muted border border-transparent focus-within:border-brand/30 focus-within:bg-surface rounded-md px-3 py-1.5 transition-all duration-fast">
-            <Search className="text-gray-400 mr-2" size={16} />
-            <input 
-              type="text" 
-              placeholder="Search issues, epics, or jump to... (Ctrl+K)" 
-              className="w-full bg-transparent border-none focus:outline-none text-[13px] placeholder-gray-400 text-gray-900"
-            />
+        {/* 2. Top Bar (Integrated) */}
+        <header className="h-16 flex items-center justify-between mb-4 flex-shrink-0">
+          {/* Logo Area */}
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-primary tracking-tight-hdr">Agileo</h1>
           </div>
-          
-          <div className="flex items-center space-x-4 text-gray-400">
-            <button className="hover:text-gray-700 transition-colors duration-fast">
-              <Bell size={18} />
+
+          {/* Center: Pill-shaped filters */}
+          <div className="hidden md:flex items-center bg-surface shadow-ambient rounded-pill p-1 border-1.5 border-divider/50">
+            <button className="px-4 py-1.5 rounded-pill bg-primary text-white text-sm font-medium">This Sprint</button>
+            <button className="px-4 py-1.5 rounded-pill text-muted hover:text-primary text-sm font-medium transition-colors">Q2 Roadmaps</button>
+            <button className="px-4 py-1.5 rounded-pill text-muted hover:text-primary text-sm font-medium transition-colors">All Time</button>
+          </div>
+
+          {/* Right: Ghost-circle notification icons */}
+          <div className="flex items-center gap-2">
+            <button className="w-10 h-10 rounded-full flex items-center justify-center text-muted hover:bg-white hover:shadow-ambient transition-all">
+              <Search size={18} strokeWidth={2.5} />
             </button>
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-indigo-300 ring-2 ring-white shadow-sm cursor-pointer hover:opacity-90 transition-opacity"></div>
+            <button className="w-10 h-10 rounded-full flex items-center justify-center text-muted hover:bg-white hover:shadow-ambient transition-all">
+              <Bell size={18} strokeWidth={2.5} />
+            </button>
+            <button className="w-10 h-10 rounded-full flex items-center justify-center text-muted hover:bg-white hover:shadow-ambient transition-all">
+              <Mail size={18} strokeWidth={2.5} />
+            </button>
           </div>
         </header>
 
-        {/* Content Area - Where the Dashboard/Board will live */}
-        <main className="flex-1 overflow-y-auto p-8">
-          <div className="max-w-[1200px] mx-auto">
-            {children}
-          </div>
+        {/* 3. Main Area (Children / Bento Grid wrapper) */}
+        <main className="flex-1 overflow-y-auto pb-4 custom-scrollbar pr-2">
+          {children}
         </main>
       </div>
+
+      {/* 4. Right Panel (Contextual, 280px) */}
+      <aside className="hidden xl:flex w-[280px] flex-shrink-0 flex-col gap-4">
+        <div className="bg-surface shadow-ambient rounded-card-lg p-5 flex-1 border-0">
+          <h2 className="text-sm font-bold text-primary mb-4">Sprint Events</h2>
+          {/* Events List Placeholder */}
+          <div className="text-sm text-muted">No upcoming events.</div>
+        </div>
+        <div className="bg-surface shadow-ambient rounded-card-lg p-5 flex-1 border-0">
+          <h2 className="text-sm font-bold text-primary mb-4">Active Blockers</h2>
+          {/* Blockers List Placeholder */}
+          <div className="text-sm text-muted">No active blockers.</div>
+        </div>
+      </aside>
+
     </div>
   );
 }
 
-// Navigation Item Component
-function NavItem({ to, icon, label }) {
+// Sidebar Icon Component (Handles the 36px circular dark background state)
+function SidebarIcon({ to, icon }) {
   return (
     <NavLink 
       to={to}
-      className={({ isActive }) => `w-full flex items-center space-x-3 px-2 py-1.5 rounded-md text-[13px] font-medium transition-all duration-fast ease-micro-spring ${
-        isActive 
-          ? 'bg-brand/10 text-brand' 
-          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-      }`}
+      className={({ isActive }) => `
+        w-9 h-9 rounded-full flex items-center justify-center transition-all duration-150 ease-out
+        ${isActive 
+          ? 'bg-primary text-white shadow-md' 
+          : 'text-muted hover:text-primary hover:bg-shell/50'
+        }
+      `}
     >
       {icon}
-      <span>{label}</span>
     </NavLink>
   );
 }
