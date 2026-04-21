@@ -1,86 +1,48 @@
 from fastapi import APIRouter, HTTPException
-from api.database import get_db
-from api.models import TaskCreate, TaskUpdate, TaskStatusUpdate
+from typing import List, Dict, Any
+from ..models import Task, TaskBase, SprintMetrics
+from ..database import get_db_data, save_db_data
+from datetime import datetime
 
 router = APIRouter()
 
-@router.get("/sprints/{sprint_id}/tasks", response_model=list[dict])
-def get_tasks(sprint_id: int):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM sprints WHERE id = ?", (sprint_id,))
-        if not cursor.fetchone():
-            raise HTTPException(status_code=404, detail="Sprint not found")
+@router.get("/sprints/{sprint_id}/tasks", response_model=List[Task])
+def get_tasks(sprint_id: str):
+    db = get_db_data()
+    tasks = [t for t in db.tasks if t.sprint_id == sprint_id]
+    return sorted(tasks, key=lambda x: x.order)
 
-        cursor.execute("SELECT * FROM tasks WHERE sprint_id = ? ORDER BY sort_order ASC, id DESC", (sprint_id,))
-        return [dict(row) for row in cursor.fetchall()]
+@router.post("/tasks", response_model=Task)
+def create_task(task_in: TaskBase):
+    db = get_db_data()
+    new_task = Task(**task_in.model_dump())
+    db.tasks.append(new_task)
+    save_db_data(db)
+    return new_task
 
-@router.post("/sprints/{sprint_id}/tasks", response_model=dict)
-def create_task(sprint_id: int, task: TaskCreate):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM sprints WHERE id = ?", (sprint_id,))
-        if not cursor.fetchone():
-            raise HTTPException(status_code=404, detail="Sprint not found")
+@router.patch("/tasks/{task_id}", response_model=Task)
+def update_task_status_and_order(task_id: str, update_data: Dict[str, Any]):
+    db = get_db_data()
+    for task in db.tasks:
+        if task.id == task_id:
+            if "status" in update_data:
+                task.status = update_data["status"]
+            if "order" in update_data:
+                task.order = update_data["order"]
+            task.updated_at = datetime.utcnow()
+            save_db_data(db)
+            return task
+    raise HTTPException(status_code=404, detail="Task not found")
 
-        cursor.execute(
-            """INSERT INTO tasks (sprint_id, story_id, title, description, assignee) 
-               VALUES (?, ?, ?, ?, ?)""",
-            (sprint_id, task.story_id, task.title, task.description, task.assignee)
-        )
-        conn.commit()
-        task_id = cursor.lastrowid
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (task_id,))
-        return dict(cursor.fetchone())
-
-@router.put("/tasks/{id}", response_model=dict)
-def update_task(id: int, task: TaskUpdate):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
-        if not cursor.fetchone():
-            raise HTTPException(status_code=404, detail="Task not found")
-        
-        fields = []
-        values = []
-        for key, value in task.dict(exclude_unset=True).items():
-            fields.append(f"{key} = ?")
-            values.append(value)
-            
-        if not fields:
-            cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
-            return dict(cursor.fetchone())
-            
-        query = f"UPDATE tasks SET {', '.join(fields)} WHERE id = ?"
-        values.append(id)
-        
-        cursor.execute(query, tuple(values))
-        conn.commit()
-        
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
-        return dict(cursor.fetchone())
-
-@router.delete("/tasks/{id}")
-def delete_task(id: int):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
-        if not cursor.fetchone():
-            raise HTTPException(status_code=404, detail="Task not found")
-            
-        cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
-        conn.commit()
-        return {"message": "Task deleted successfully"}
-
-@router.patch("/tasks/{id}/status", response_model=dict)
-def update_task_status(id: int, status_update: TaskStatusUpdate):
-    with get_db() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
-        if not cursor.fetchone():
-            raise HTTPException(status_code=404, detail="Task not found")
-            
-        cursor.execute("UPDATE tasks SET status = ? WHERE id = ?", (status_update.status, id))
-        conn.commit()
-        cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
-        return dict(cursor.fetchone())
+@router.get("/metrics/dashboard", response_model=SprintMetrics)
+def get_dashboard_metrics():
+    db = get_db_data()
+    completed = sum(1 for t in db.tasks if t.status == "DONE")
+    blockers = sum(1 for t in db.tasks if t.priority == "HIGH" and t.status != "DONE")
+    
+    return SprintMetrics(
+        velocity=completed * 3, 
+        completed_tasks=completed,
+        active_blockers=blockers,
+        cycle_lead_time_days=2.4
+    )

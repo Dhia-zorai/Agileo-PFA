@@ -1,112 +1,73 @@
-from pydantic import BaseModel
-from typing import Optional, List
-from datetime import date
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from datetime import datetime
+import uuid
 
-# Projects
-class ProjectCreate(BaseModel):
+# Base models
+def generate_id():
+    return str(uuid.uuid4())
+
+class ProjectBase(BaseModel):
     name: str
     description: Optional[str] = None
-    status: Optional[str] = 'ACTIVE'
+    status: str = "ACTIVE"
 
-class ProjectUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    status: Optional[str] = None
+class Project(ProjectBase):
+    id: str = Field(default_factory=generate_id)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-class ProjectResponse(BaseModel):
-    id: int
-    name: str
-    description: Optional[str]
-    status: str
-    created_at: str
-
-# Sprints
-class SprintCreate(BaseModel):
+class SprintBase(BaseModel):
+    project_id: str
     name: str
     goal: Optional[str] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
-    capacity: Optional[int] = 0
+    capacity: int = 0
+    status: str = "PLANNED"
 
-class SprintUpdate(BaseModel):
-    name: Optional[str] = None
-    goal: Optional[str] = None
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-    capacity: Optional[int] = None
-    status: Optional[str] = None
+class Sprint(SprintBase):
+    id: str = Field(default_factory=generate_id)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
-class SprintResponse(BaseModel):
-    id: int
-    project_id: int
-    name: str
-    goal: Optional[str]
-    start_date: Optional[str]
-    end_date: Optional[str]
-    capacity: int
-    status: str
-    created_at: str
-
-class SprintStatusUpdate(BaseModel):
-    pass # Empty body for /start or /complete, but let's allow it
-    
-# User Stories
-class UserStoryCreate(BaseModel):
+class StoryBase(BaseModel):
+    project_id: str
+    sprint_id: Optional[str] = None
     as_a: str
     i_want: str
     so_that: str
-    priority: Optional[str] = 'SHOULD'
-    story_points: Optional[int] = 1
-    sprint_id: Optional[int] = None
+    priority: str = "SHOULD"
+    story_points: int = 1
+    status: str = "BACKLOG"
 
-class UserStoryUpdate(BaseModel):
-    as_a: Optional[str] = None
-    i_want: Optional[str] = None
-    so_that: Optional[str] = None
-    priority: Optional[str] = None
-    story_points: Optional[int] = None
-    status: Optional[str] = None
+class Story(StoryBase):
+    id: str = Field(default_factory=generate_id)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
-class UserStoryAssign(BaseModel):
-    sprint_id: Optional[int]
-
-class UserStoryResponse(BaseModel):
-    id: int
-    project_id: int
-    sprint_id: Optional[int]
-    as_a: str
-    i_want: str
-    so_that: str
-    priority: str
-    story_points: int
-    status: str
-    created_at: str
-
-# Tasks
-class TaskCreate(BaseModel):
+class TaskBase(BaseModel):
+    sprint_id: str
+    story_id: Optional[str] = None
     title: str
     description: Optional[str] = None
-    story_id: Optional[int] = None
+    status: str = "TODO" # TODO, IN_PROGRESS, REVIEW, DONE
+    priority: str = "MEDIUM"
+    order: float = 0.0 # Lexicographical order for DND sorting
     assignee: Optional[str] = None
+    assignee_avatar: Optional[str] = None
 
-class TaskUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    story_id: Optional[int] = None
-    assignee: Optional[str] = None
-    status: Optional[str] = None
-    sort_order: Optional[int] = None
+class Task(TaskBase):
+    id: str = Field(default_factory=generate_id)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-class TaskStatusUpdate(BaseModel):
-    status: str # "TODO", "IN_PROGRESS", "IN_REVIEW", "DONE"
+class SprintMetrics(BaseModel):
+    velocity: int = 0
+    completed_tasks: int = 0
+    active_blockers: int = 0
+    cycle_lead_time_days: float = 0.0
 
-class TaskResponse(BaseModel):
-    id: int
-    sprint_id: int
-    story_id: Optional[int]
-    title: str
-    description: Optional[str]
-    assignee: Optional[str]
-    status: str
-    sort_order: int
-    created_at: str
+class DatabaseSchema(BaseModel):
+    projects: List[Project] = []
+    sprints: List[Sprint] = []
+    stories: List[Story] = []
+    tasks: List[Task] = []
