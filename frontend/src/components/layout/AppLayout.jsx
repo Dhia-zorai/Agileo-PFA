@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, ListTodo, KanbanSquare, Search, Bell, Settings } from 'lucide-react';
+import { LayoutDashboard, ListTodo, Search, Bell, Settings } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 
 export default function AppLayout({ children }) {
