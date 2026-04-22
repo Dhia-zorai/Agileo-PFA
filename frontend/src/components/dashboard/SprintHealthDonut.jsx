@@ -1,25 +1,29 @@
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-export default function SprintHealthDonut() {
-  // S&P 500 minimalist colors
+export default function SprintHealthDonut({ tasks = [], activeSprintName = 'Current Sprint' }) {
+  const done = tasks.filter((t) => t.status === 'DONE').length;
+  const inProgress = tasks.filter((t) => t.status === 'IN_PROGRESS' || t.status === 'IN_REVIEW').length;
+  const todo = Math.max(tasks.length - done - inProgress, 0);
+  const donePct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+
   const data = [
-    { name: 'Completed', value: 65, color: '#10B981' }, // Success Emerald
-    { name: 'In Progress', value: 25, color: '#4F46E5' }, // Brand Indigo
-    { name: 'To Do', value: 10, color: '#E5E7EB' }, // Divider gray
+    { name: 'Completed', value: done, color: '#10B981' },
+    { name: 'In Progress', value: inProgress, color: '#4F46E5' },
+    { name: 'To Do', value: todo, color: '#E5E7EB' },
   ];
 
   return (
     <div className="bg-surface shadow-ambient rounded-card-lg p-6 flex flex-col h-full border border-divider/40">
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-base font-bold text-primary tracking-tight-hdr">Sprint Health</h3>
-        <span className="text-xs font-bold px-2.5 py-1 rounded-pill bg-status-progress text-brand-700">Sprint 6</span>
+        <span className="text-xs font-bold px-2.5 py-1 rounded-pill bg-status-progress text-brand-700">{activeSprintName}</span>
       </div>
       
       <div className="flex-1 flex flex-col justify-center items-center relative min-h-[220px]">
         {/* Inner Text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-3xl font-extrabold text-primary tracking-tight-hdr">65%</span>
+          <span className="text-3xl font-extrabold text-primary tracking-tight-hdr">{donePct}%</span>
           <span className="text-xs font-medium text-muted uppercase tracking-widest mt-1">Completed</span>
         </div>
         

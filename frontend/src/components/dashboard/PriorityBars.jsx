@@ -1,13 +1,26 @@
 import React from 'react';
 
-const priorities = [
-  { label: 'Must Have', points: 34, total: 40, color: 'bg-status-must', bg: 'bg-[#FCA5A5]' },
-  { label: 'Should Have', points: 15, total: 25, color: 'bg-status-should', bg: 'bg-[#C4B5FD]' },
-  { label: 'Could Have', points: 5, total: 10, color: 'bg-[#3B82F6]', bg: 'bg-[#93C5FD]' },
-  { label: 'Won\'t Have', points: 0, total: 5, color: 'bg-muted', bg: 'bg-divider' },
-];
+export default function PriorityBars({ stories = [] }) {
+  const groups = {
+    MUST: 0,
+    SHOULD: 0,
+    COULD: 0,
+    WONT: 0,
+  };
+  stories.forEach((story) => {
+    if (groups[story.priority] !== undefined) {
+      groups[story.priority] += story.story_points || 0;
+    }
+  });
+  const total = Object.values(groups).reduce((sum, value) => sum + value, 0) || 1;
 
-export default function PriorityBars() {
+  const priorities = [
+    { label: 'Must Have', points: groups.MUST, total, color: 'bg-status-must', bg: 'bg-[#FCA5A5]' },
+    { label: 'Should Have', points: groups.SHOULD, total, color: 'bg-status-should', bg: 'bg-[#C4B5FD]' },
+    { label: 'Could Have', points: groups.COULD, total, color: 'bg-[#3B82F6]', bg: 'bg-[#93C5FD]' },
+    { label: 'Won\'t Have', points: groups.WONT, total, color: 'bg-muted', bg: 'bg-divider' },
+  ];
+
   return (
     <div className="bg-surface shadow-ambient rounded-card-lg p-6 flex flex-col h-full border border-divider/40">
       <div className="flex justify-between items-center mb-6">

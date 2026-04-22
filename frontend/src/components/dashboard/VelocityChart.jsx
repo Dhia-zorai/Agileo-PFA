@@ -1,17 +1,9 @@
 import React from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
-// Minimalist S&P 500 styling area chart
-const data = [
-  { name: 'Sprint 1', velocity: 12 },
-  { name: 'Sprint 2', velocity: 18 },
-  { name: 'Sprint 3', velocity: 15 },
-  { name: 'Sprint 4', velocity: 25 },
-  { name: 'Sprint 5', velocity: 22 },
-  { name: 'Sprint 6', velocity: 30 },
-];
+export default function VelocityChart({ data = [] }) {
+  const chartData = data.length ? data : [{ name: 'No Sprints', velocity: 0 }];
 
-export default function VelocityChart() {
   return (
     <div className="bg-surface shadow-ambient rounded-card-lg p-6 flex flex-col h-full border border-divider/40">
       <div className="flex justify-between items-center mb-6">
@@ -22,7 +14,7 @@ export default function VelocityChart() {
       </div>
       <div className="flex-1 w-full min-h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
+          <AreaChart data={chartData} margin={{ top: 5, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorVelocity" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#4F46E5" stopOpacity={0.2} />

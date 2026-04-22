@@ -26,7 +26,7 @@ export default function TaskForm({ isOpen, onClose, initialData, stories, onSubm
     await onSubmit({
       title,
       description,
-      story_id: storyId ? parseInt(storyId) : null,
+      story_id: storyId || null,
       assignee: assignee || null
     });
     onClose();

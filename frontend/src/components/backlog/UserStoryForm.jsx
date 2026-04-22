@@ -37,7 +37,7 @@ export default function UserStoryForm({ isOpen, onClose, initialData, sprints, o
       so_that: soThat, 
       priority, 
       story_points: storyPoints,
-      sprint_id: sprintId ? parseInt(sprintId) : null
+      sprint_id: sprintId || null
     });
     onClose();
   };
